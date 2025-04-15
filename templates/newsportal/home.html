@@ -1,0 +1,41 @@
+{% extends "newsportal/base.html" %}
+
+{% block content %}
+  <!-- Breaking News Ticker -->
+  <div class="breaking-news-ticker bg-light py-2">
+    <div class="container">
+      <div class="d-flex align-items-center">
+        <span class="badge bg-danger me-2">BREAKING</span>
+        <marquee behavior="scroll"
+                 direction="left"
+                 onmouseover="this.stop();"
+                 onmouseout="this.start();">
+          <a href="article.html" class="text-dark text-decoration-none me-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a>
+          <a href="article.html" class="text-dark text-decoration-none me-4">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</a>
+          <a href="article.html" class="text-dark text-decoration-none me-4">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</a>
+        </marquee>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="container mt-4">
+    <div class="row">
+      <!-- Main News Section -->
+      <div class="col-lg-8">
+        {% include "newsportal/home/left/featured_story.html" %}
+        {% include "newsportal/home/left/trending_news.html" %}
+        {% include "newsportal/home/left/weekly_top_news.html" %}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="position-sticky sticky-sidebar-offset">
+          {% include "newsportal/home/right/most_popular.html" %}
+          {% include "newsportal/home/right/advertisement.html" %}
+          {% include "newsportal/home/right/newsletter.html" %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
