@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 
-from newspaper.models import Advertisement, Category, Post, Tag
-from django.views.generic import ListView
+from newspaper.forms import ContactForm
+from newspaper.models import Advertisement, Category, Contact, Post, Tag
+from django.views.generic import ListView, CreateView
 
 from django.utils import timezone
 from datetime import timedelta
@@ -79,3 +81,16 @@ class TagListView(ListView):
     model = Tag
     template_name = "newsportal/tags.html"
     context_object_name = "tags"
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = "newsportal/categories.html"
+    context_object_name = "categories"
+
+
+class ContactCreateView(CreateView):
+    model = Contact
+    template_name = "newsportal/contact.html"
+    form_class = ContactForm
+    success_url = reverse_lazy("contact")
