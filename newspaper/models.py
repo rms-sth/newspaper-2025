@@ -33,7 +33,7 @@ class Tag(TimeStampModel):
 # null = True => when there is no data in published_at null value will be saved in db
 # blank = True => no need to validate if the data is not provided
 
-
+# post.tag.all()
 class Post(TimeStampModel):
     STATUS_CHOICES = [
         ("active", "Active"),
@@ -71,8 +71,18 @@ class Contact(TimeStampModel):
         return self.name
 
     class Meta:
-        ordering = ["created_at"] # Contact.objects.all() => order_by("created_at")
+        ordering = ["created_at"]  # Contact.objects.all() => order_by("created_at")
         # db_table = 'contact'
+
+# post.author.userprofile.image
+class UserProfile(TimeStampModel):
+    user = models.OneToOneField("auth.User", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="user_images/%Y/%m/%d", blank=False)
+    address = models.CharField(max_length=200)
+    biography = models.TextField()
+
+    def __str__(self):
+        return self.user.username
 
 
 # Post - Author
