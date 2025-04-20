@@ -7,40 +7,62 @@
       <span>Get In Touch</span>
     </h1>
 
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
     <div class="row g-4">
       <!-- Contact Form -->
       <div class="col-lg-7">
         <div class="contact-form-section">
           <h3 class="mb-4 contact-form-title">Send Us a Message</h3>
-          <form action="" method="post">
+          <form action="" method="post" novalidate>
             {% csrf_token %}
             <div class="mb-3">
               <label for="contactName" class="form-label">Your Name</label>
+              {{ form.name.errors }}
               <input name="name"
                      type="text"
                      class="form-control"
                      id="contactName"
+                     value="{{ form.name.value|default_if_none:'' }}"
                      required />
             </div>
             <div class="mb-3">
               <label for="contactEmail" class="form-label">Your Email</label>
+              {{ form.email.errors }}
               <input name="email"
                      type="email"
                      class="form-control"
                      id="contactEmail"
+                     value="{{ form.email.value|default_if_none:'' }}"
                      required />
             </div>
             <div class="mb-3">
               <label for="contactSubject" class="form-label">Subject</label>
-              <input name="subject" type="text" class="form-control" id="contactSubject" />
+              {{ form.subject.errors }}
+              <input name="subject"
+                     type="text"
+                     value="{{ form.subject.value|default_if_none:'' }}"
+                     class="form-control"
+                     id="contactSubject" />
             </div>
             <div class="mb-3">
               <label for="contactMessage" class="form-label">Message</label>
+              {{ form.message.errors }}
               <textarea name="message"
                         class="form-control"
                         id="contactMessage"
                         rows="5"
-                        required></textarea>
+                        required>{{ form.message.value|default_if_none:'' }}</textarea>
             </div>
             <button type="submit" class="btn btn-success btn-lg">Send Message</button>
           </form>

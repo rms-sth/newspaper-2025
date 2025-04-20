@@ -3,7 +3,8 @@ from django.urls import reverse_lazy
 
 from newspaper.forms import ContactForm
 from newspaper.models import Advertisement, Category, Contact, Post, Tag
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
+from django.contrib.messages.views import SuccessMessageMixin
 
 from django.utils import timezone
 from datetime import timedelta
@@ -89,8 +90,20 @@ class CategoryListView(ListView):
     context_object_name = "categories"
 
 
-class ContactCreateView(CreateView):
+class ContactCreateView(SuccessMessageMixin, CreateView):
     model = Contact
     template_name = "newsportal/contact.html"
     form_class = ContactForm
     success_url = reverse_lazy("contact")
+    success_message = "Your message has been sent successfully!"
+
+
+class PostDetailView(SidebarMixin, DetailView):
+    model = Post
+    template_name = "newsportal/detail/detail.html"
+    context_object_name = "post"
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        query = query.filter(published_at__isnull=False, status="active")
+        return query
