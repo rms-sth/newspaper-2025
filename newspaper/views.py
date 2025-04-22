@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 
 from newspaper.forms import ContactForm
 from newspaper.models import Advertisement, Category, Contact, Post, Tag
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, View
 from django.contrib.messages.views import SuccessMessageMixin
 
 from django.utils import timezone
@@ -115,3 +115,35 @@ class PostDetailView(SidebarMixin, DetailView):
         ).order_by("-published_at", "-views_count")[:2]
 
         return context
+
+
+from newspaper.forms import CommentForm
+
+
+class CommentView(View):
+    def post(self, request, *args, **kwargs):
+        post_id = request.POST["post"]
+
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.save()
+            return redirect("post-detail", post_id)
+        else:
+            post = Post.objects.get(pk=post_id)
+
+            popular_posts = Post.objects.filter(
+                published_at__isnull=False, status="active"
+            ).order_by("-published_at")[:5]
+            advertisement = Advertisement.objects.all().order_by("-created_at").first()
+            return render(
+                request,
+                "newsportal/detail/detail.html",
+                {
+                    "post": post,
+                    "form": form,
+                    "popular_posts": popular_posts,
+                    "advertisement": advertisement,
+                },
+            )

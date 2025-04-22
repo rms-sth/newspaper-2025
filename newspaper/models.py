@@ -33,7 +33,10 @@ class Tag(TimeStampModel):
 # null = True => when there is no data in published_at null value will be saved in db
 # blank = True => no need to validate if the data is not provided
 
+
 # post.tag.all()
+
+# post.
 class Post(TimeStampModel):
     STATUS_CHOICES = [
         ("active", "Active"),
@@ -74,6 +77,7 @@ class Contact(TimeStampModel):
         ordering = ["created_at"]  # Contact.objects.all() => order_by("created_at")
         # db_table = 'contact'
 
+
 # post.author.userprofile.image
 class UserProfile(TimeStampModel):
     user = models.OneToOneField("auth.User", on_delete=models.CASCADE)
@@ -84,6 +88,23 @@ class UserProfile(TimeStampModel):
     def __str__(self):
         return self.user.username
 
+# post.comment_set.all()
+class Comment(TimeStampModel):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    content = models.TextField()
+
+    def __str__(self):
+        return f"{self.content[:50]} | {self.user.username}"
+
+#post - comment 
+# 1 post can have M comments => M
+# 1 comment is associated to only 1 post => 1
+# ForeginKey => M
+
+# comment-user
+# 1 user can add M comment => M
+# 1 comment is associated to only 1 user => 1
 
 # Post - Author
 # 1 author can add M posts => M
