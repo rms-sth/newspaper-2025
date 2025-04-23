@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "contact us",
-        "post detail"
+        "post detail",
+        "comment"
     ]
 }

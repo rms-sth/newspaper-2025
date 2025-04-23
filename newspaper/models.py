@@ -97,7 +97,15 @@ class Comment(TimeStampModel):
     def __str__(self):
         return f"{self.content[:50]} | {self.user.username}"
 
-#post - comment 
+
+class Newsletter(TimeStampModel):
+    email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.email
+
+
+# post - comment
 # 1 post can have M comments => M
 # 1 comment is associated to only 1 post => 1
 # ForeginKey => M

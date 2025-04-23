@@ -9,7 +9,8 @@
     <!-- Bootstrap CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="{% static 'fonts/bootstrap-icons/bootstrap-icons.min.css' %}" />
+    <link rel="stylesheet"
+          href="{% static 'fonts/bootstrap-icons/bootstrap-icons.min.css' %}" />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   </head>
@@ -25,7 +26,53 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
     <!-- Custom JS -->
     <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+        $("#newsletter_side_form").submit(function(e) {
+            e.preventDefault()
+            let serializedData = $(this).serialize()
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'newsletter' %}",
+                data: serializedData,
+                success: function(response) {
+                    console.log("Success", response)
+                    $("#newsletter_side_message").append(
+                      `
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        ${response.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                      
+                      `
+                    )
+                    $("#newsletter_side_form")[0].reset();
+                    setTimeout(function() {
+                        $(".alert").alert('close')
+                    }, 2000)
+
+                },
+                error: function(response) {
+                    console.log("Failure", response)
+                    $("#newsletter_side_message").append(
+                      `
+                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        ${response.responseJSON.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                      
+                      `
+                    )
+                    setTimeout(function() {
+                        $(".alert").alert('close')
+                    }, 2000)
+                }
+            })
+        })
+    </script>
   </body>
 </html>

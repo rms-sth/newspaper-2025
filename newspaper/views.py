@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 
-from newspaper.forms import ContactForm
+from newspaper.forms import ContactForm, NewsletterForm
 from newspaper.models import Advertisement, Category, Contact, Post, Tag
 from django.views.generic import ListView, CreateView, DetailView, View
 from django.contrib.messages.views import SuccessMessageMixin
@@ -146,4 +146,39 @@ class CommentView(View):
                     "popular_posts": popular_posts,
                     "advertisement": advertisement,
                 },
+            )
+
+
+from django.http import JsonResponse
+
+
+class NewsletterView(View):
+    def post(self, request):
+        is_ajax = request.headers.get("x-requested-with")
+        if is_ajax == "XMLHttpRequest":
+            form = NewsletterForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "message": "Successfully subscribed to the newsletter.",
+                    },
+                    status=201,
+                )
+            else:
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Cannot subscribe to the newsletter.",
+                    },
+                    status=400,
+                )
+        else:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Cannot process. Must be an AJAX XMLHttpRequest",
+                },
+                status=400,
             )
