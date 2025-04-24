@@ -43,17 +43,22 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="about.html">About Us</a>
+          <a class="nav-link" href="{% url 'about' %}">About Us</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
         </li>
       </ul>
-      <form class="d-flex me-3" role="search">
+      <form class="d-flex me-3"
+            role="search"
+            action="{% url 'search' %}"
+            method="get">
         <input class="form-control form-control-sm me-2"
+               name="query"
                type="search"
                placeholder="Search..."
-               aria-label="Search" />
+               aria-label="Search"
+               value="{{ query }}" />
         <button class="btn btn-outline-success btn-sm" type="submit">
           <i class="bi bi-search"></i>
         </button>
@@ -71,15 +76,14 @@
       <!-- Authentication Links -->
       <div class="navbar-nav ms-auto d-flex align-items-center">
         {% if user.is_authenticated %}
-          <span class="navbar-text me-3">
-            Welcome, {{ user.username }}!
-          </span>
+          <span class="navbar-text me-3">Welcome, {{ user.username }}!</span>
           <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
           </form>
         {% else %}
-          <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-sm me-2">Login</a>
+          <a href="{% url 'accounts:login' %}"
+             class="btn btn-outline-primary btn-sm me-2">Login</a>
           <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-sm">Register</a>
         {% endif %}
       </div>

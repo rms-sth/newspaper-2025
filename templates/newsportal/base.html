@@ -42,7 +42,7 @@
                 success: function(response) {
                     console.log("Success", response)
                     $("#newsletter_side_message").append(
-                      `
+                        `
                       <div class="alert alert-success alert-dismissible fade show" role="alert">
                         ${response.message}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -59,7 +59,7 @@
                 error: function(response) {
                     console.log("Failure", response)
                     $("#newsletter_side_message").append(
-                      `
+                        `
                       <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         ${response.responseJSON.message}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -73,6 +73,15 @@
                 }
             })
         })
+    </script>
+    <script>
+        $(".page-link").click(function(e) {
+            e.preventDefault();
+            let url = new URL(window.location.href);
+            let searchParams = (url.searchParams.get("query") || ""); // nepal
+            url.search = $(this).attr("href") + "&query=" + searchParams; // ?page=2&query=nepal
+            window.location.href = url;
+        });
     </script>
   </body>
 </html>

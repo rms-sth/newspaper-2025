@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "contact us",
         "post detail",
-        "comment"
+        "comment",
+        "newsletter"
     ]
 }
