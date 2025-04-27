@@ -27,6 +27,9 @@ class Tag(TimeStampModel):
     name = models.CharField(max_length=100)
 
     def __str__(self):
+        """
+        Return a string representation of the Tag, which is its name.
+        """
         return self.name
 
 
