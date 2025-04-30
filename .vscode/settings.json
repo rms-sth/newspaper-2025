@@ -4,6 +4,7 @@
         "post detail",
         "comment",
         "newsletter",
-        "search"
+        "search",
+        "api"
     ]
 }

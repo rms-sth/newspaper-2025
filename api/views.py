@@ -1,16 +1,21 @@
 from django.contrib.auth.models import Group, User
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, exceptions
 
 from rest_framework.response import Response
 
 from api.serializers import (
     CategorySerializer,
+    ContactSerializer,
     GroupSerializer,
+    NewsletterSerializer,
+    PostPublishSerializer,
     PostSerializer,
     TagSerializer,
     UserSerializer,
 )
-from newspaper.models import Category, Post, Tag
+from newspaper.models import Category, Contact, Newsletter, Post, Tag
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+
 
 # CRUD
 class UserViewSet(viewsets.ModelViewSet):
@@ -81,6 +86,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
             # search start:
             from django.db.models import Q
+
             search_term = self.request.query_params.get("search", None)
             if search_term:
                 # Search by title and content (case-insensitive)
@@ -102,8 +108,6 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-from rest_framework.generics import ListAPIView
-
 
 class PostListByCategoryView(ListAPIView):
     queryset = Post.objects.all()
@@ -118,3 +122,65 @@ class PostListByCategoryView(ListAPIView):
             category=self.kwargs["category_id"],
         )
         return queryset
+
+
+class DraftListView(ListAPIView):
+    queryset = Post.objects.filter(published_at__isnull=True)
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class DraftDetailView(RetrieveAPIView):
+    queryset = Post.objects.filter(published_at__isnull=True)
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class NewsletterViewSet(viewsets.ModelViewSet):
+    queryset = Newsletter.objects.all()
+    serializer_class = NewsletterSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve", "destroy"]:
+            return [permissions.IsAuthenticated()]
+        return super().get_permissions()
+
+    def update(self, request, *args, **kwargs):
+        raise exceptions.MethodNotAllowed(request.method)
+
+
+class ContactViewSet(viewsets.ModelViewSet):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve", "destroy"]:
+            return [permissions.IsAuthenticated()]
+        return super().get_permissions()
+
+    def update(self, request, *args, **kwargs):
+        raise exceptions.MethodNotAllowed(request.method)
+
+
+from rest_framework.views import APIView
+from rest_framework import status
+from django.utils import timezone
+
+
+class PostPublishViewSet(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = PostPublishSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            data = serializer.data
+
+            # publish the post
+            post = Post.objects.get(pk=data["id"])
+            post.published_at = timezone.now()
+            post.save()
+
+            serialized_data = PostSerializer(post).data
+            return Response(serialized_data, status=status.HTTP_200_OK)
