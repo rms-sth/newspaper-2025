@@ -36,5 +36,10 @@ urlpatterns = [
         views.PostPublishViewSet.as_view(),
         name="post-publish-api",
     ),
+    path(
+        "post/<int:post_id>/comments/",
+        views.CommentViewSet.as_view(),
+        name="comment-list-api",
+    ),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]

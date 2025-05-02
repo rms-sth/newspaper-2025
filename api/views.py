@@ -1,10 +1,11 @@
 from django.contrib.auth.models import Group, User
-from rest_framework import permissions, viewsets, exceptions
+from rest_framework import permissions, viewsets, exceptions, status
 
 from rest_framework.response import Response
 
 from api.serializers import (
     CategorySerializer,
+    CommentSerializer,
     ContactSerializer,
     GroupSerializer,
     NewsletterSerializer,
@@ -13,7 +14,7 @@ from api.serializers import (
     TagSerializer,
     UserSerializer,
 )
-from newspaper.models import Category, Contact, Newsletter, Post, Tag
+from newspaper.models import Category, Comment, Contact, Newsletter, Post, Tag
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 
@@ -184,3 +185,24 @@ class PostPublishViewSet(APIView):
 
             serialized_data = PostSerializer(post).data
             return Response(serialized_data, status=status.HTTP_200_OK)
+
+
+class CommentViewSet(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get_permissions(self):
+        if self.request.method in ["PUT", "PATCH", "DELETE"]:
+            return [permissions.IsAdminUser()]
+        return super().get_permissions()
+
+    def get(self, request, post_id, *args, **kwargs):
+        comments = Comment.objects.filter(post=post_id).order_by("-created_at")
+        serialized_data = CommentSerializer(comments, many=True).data
+        return Response(serialized_data, status=status.HTTP_200_OK)
+
+    def post(self, request, post_id, *args, **kwargs):
+        request.data.update({"post": post_id, 'user': request.user.id})
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
