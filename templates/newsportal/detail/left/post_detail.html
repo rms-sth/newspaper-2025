@@ -25,7 +25,7 @@
 
   <!-- Article Body -->
   <section class="article-content">
-    {{ post.content|linebreaksbr }}
+    {{ post.content|safe|linebreaksbr }}
   </section>
 
   <!-- Article Footer -->
