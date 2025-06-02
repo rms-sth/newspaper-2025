@@ -47,6 +47,10 @@ class HomeView(SidebarMixin, ListView):
             published_at__isnull=False, status="active", published_at__gte=one_week_ago
         ).order_by("-published_at", "-views_count")[:5]
 
+        context["breaking_news"] = Post.objects.filter(
+            published_at__isnull=False, status="active", is_breaking_news=True
+        ).order_by("-published_at")[:3]
+
         return context
 
 
@@ -190,18 +194,21 @@ from django.db.models import Q
 # | => OR
 # & => and
 
+
 class PostSearchView(View):
     template_name = "newsportal/list/list.html"
 
     def get(self, request, *args, **kwargs):
         # query=nepal search => title=nepal or content=nepal
         print(request.GET)
-        query = request.GET["query"] # nepal => NePal 
+        query = request.GET["query"]  # nepal => NePal
         post_list = Post.objects.filter(
             (Q(title__icontains=query) | Q(content__icontains=query))
             & Q(status="active")
             & Q(published_at__isnull=False)
-        ).order_by("-published_at") # QuerySet => ORM
+        ).order_by(
+            "-published_at"
+        )  # QuerySet => ORM
 
         # pagination start
         page = request.GET.get("page", 1)  # x
@@ -214,10 +221,10 @@ class PostSearchView(View):
         # pagination end
 
         popular_posts = Post.objects.filter(
-                published_at__isnull=False, status="active"
-            ).order_by("-published_at")[:5]
+            published_at__isnull=False, status="active"
+        ).order_by("-published_at")[:5]
         advertisement = Advertisement.objects.all().order_by("-created_at").first()
-        
+
         return render(
             request,
             self.template_name,

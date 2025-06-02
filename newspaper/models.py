@@ -19,7 +19,7 @@ class Category(TimeStampModel):
 
     class Meta:
         ordering = ["name"]  # Category.objects.all()
-        verbose_name = "categories"
+        verbose_name = "category"
         verbose_name_plural = "Categories"  # Add this line
 
 
@@ -39,6 +39,7 @@ class Tag(TimeStampModel):
 
 # post.tag.all()
 
+
 # post.
 class Post(TimeStampModel):
     STATUS_CHOICES = [
@@ -51,6 +52,7 @@ class Post(TimeStampModel):
     author = models.ForeignKey("auth.User", on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="active")
     views_count = models.PositiveBigIntegerField(default=0)
+    is_breaking_news = models.BooleanField(default=False)
     published_at = models.DateTimeField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     tag = models.ManyToManyField(Tag)
@@ -90,6 +92,7 @@ class UserProfile(TimeStampModel):
 
     def __str__(self):
         return self.user.username
+
 
 # post.comment_set.all()
 class Comment(TimeStampModel):

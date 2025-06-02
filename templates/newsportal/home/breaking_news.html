@@ -1,0 +1,17 @@
+<!-- Breaking News Ticker -->
+<div class="breaking-news-ticker bg-light py-2">
+  <div class="container">
+    <div class="d-flex align-items-center">
+      <span class="badge bg-danger me-2">BREAKING</span>
+      <marquee behavior="scroll"
+               direction="left"
+               onmouseover="this.stop();"
+               onmouseout="this.start();">
+        {% for breaking_new in breaking_news %}
+          <a href="{% url 'post-detail' breaking_new.pk %}"
+             class="text-dark text-decoration-none me-4">{{ breaking_new.title }}</a>
+        {% endfor %}
+      </marquee>
+    </div>
+  </div>
+</div>

@@ -1,22 +1,8 @@
 {% extends "newsportal/base.html" %}
 
 {% block content %}
-  <!-- Breaking News Ticker -->
-  <div class="breaking-news-ticker bg-light py-2">
-    <div class="container">
-      <div class="d-flex align-items-center">
-        <span class="badge bg-danger me-2">BREAKING</span>
-        <marquee behavior="scroll"
-                 direction="left"
-                 onmouseover="this.stop();"
-                 onmouseout="this.start();">
-          {% for weekly_top_post in weekly_top_posts %}
-            <a href="article.html" class="text-dark text-decoration-none me-4">{{ weekly_top_post.title }}</a>
-          {% endfor %}
-        </marquee>
-      </div>
-    </div>
-  </div>
+
+  {% include "newsportal/home/breaking_news.html" %}
 
   <!-- Main Content Area -->
   <div class="container mt-4">
