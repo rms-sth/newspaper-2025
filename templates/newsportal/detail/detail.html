@@ -10,13 +10,8 @@
         {% include "newsportal/detail/left/related_articles.html" %}
         <!-- Comments Section -->
         <section class="comments-section mt-5">
-          <h3 class="mb-4 section-title">
-            <span>User Comments (3)</span>
-          </h3>
-          <div class="card p-4 shadow-sm mb-4">
-            {% include "newsportal/detail/left/comment_form.html" %}
-          </div>
-         {% include "newsportal/detail/left/comment_list.html" %}
+          {% include "newsportal/detail/left/comment_form.html" %}
+          {% include "newsportal/detail/left/comment_list.html" %}
         </section>
       </div>
 
