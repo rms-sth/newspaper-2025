@@ -32,10 +32,7 @@ class RegistrationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = (
-            "username",
-            "email",
-        )  # Only specify fields we haven't explicitly defined above
+        fields = ("username", "email")
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
