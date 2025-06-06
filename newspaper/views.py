@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 
 from newspaper.forms import ContactForm, NewsletterForm
-from newspaper.models import Advertisement, Category, Contact, Post, Tag
+from newspaper.models import Advertisement, Category, Contact, OurTeam, Post, Tag
 from django.views.generic import ListView, CreateView, DetailView, View, TemplateView
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -245,3 +245,8 @@ class PostSearchView(View):
 
 class AboutView(TemplateView):
     template_name = "newsportal/about.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["our_teams"] = OurTeam.objects.all()
+        return context

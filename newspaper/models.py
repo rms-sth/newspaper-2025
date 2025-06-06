@@ -111,6 +111,16 @@ class Newsletter(TimeStampModel):
         return self.email
 
 
+class OurTeam(TimeStampModel):
+    name = models.CharField(max_length=100)
+    position = models.CharField(max_length=100)
+    image = models.ImageField(upload_to="team_images/%Y/%m/%d", blank=False)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+
 # post - comment
 # 1 post can have M comments => M
 # 1 comment is associated to only 1 post => 1
