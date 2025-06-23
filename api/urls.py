@@ -22,6 +22,11 @@ urlpatterns = [
         name="post-list-by-category-api",
     ),
     path(
+        "post-by-tag/<int:tag_id>/",
+        views.PostListByTagView.as_view(),
+        name="post-list-by-tag-api",
+    ),
+    path(
         "draft-list/",
         views.DraftListView.as_view(),
         name="draft-list-api",

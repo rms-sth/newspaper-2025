@@ -26,7 +26,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all().order_by("-date_joined")
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -36,7 +36,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     queryset = Group.objects.all().order_by("name")
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -46,7 +46,7 @@ class TagViewSet(viewsets.ModelViewSet):
 
     queryset = Tag.objects.all().order_by("name")
     serializer_class = TagSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
     def get_permissions(self):
         if self.action in ["list", "retrieve"]:
@@ -57,12 +57,12 @@ class TagViewSet(viewsets.ModelViewSet):
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Categorys to be viewed or edited.
+    API endpoint that allows Categories to be viewed or edited.
     """
 
     queryset = Category.objects.all().order_by("name")
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
     def get_permissions(self):
         if self.action in ["list", "retrieve"]:
@@ -78,7 +78,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     queryset = Post.objects.all().order_by("-published_at")
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -125,17 +125,34 @@ class PostListByCategoryView(ListAPIView):
         return queryset
 
 
+class PostListByTagView(ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(
+            status="active",
+            published_at__isnull=False,
+            tag=self.kwargs["tag_id"],
+        )
+        return queryset
+
+
 class DraftListView(ListAPIView):
     queryset = Post.objects.filter(published_at__isnull=True)
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class DraftDetailView(RetrieveAPIView):
     queryset = Post.objects.filter(published_at__isnull=True)
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
+
+from rest_framework import exceptions
 
 class NewsletterViewSet(viewsets.ModelViewSet):
     queryset = Newsletter.objects.all()
@@ -144,7 +161,7 @@ class NewsletterViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ["list", "retrieve", "destroy"]:
-            return [permissions.IsAuthenticated()]
+            return [permissions.IsAdminUser()]
         return super().get_permissions()
 
     def update(self, request, *args, **kwargs):
@@ -158,7 +175,7 @@ class ContactViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ["list", "retrieve", "destroy"]:
-            return [permissions.IsAuthenticated()]
+            return [permissions.IsAdminUser()]
         return super().get_permissions()
 
     def update(self, request, *args, **kwargs):
