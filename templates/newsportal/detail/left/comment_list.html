@@ -7,7 +7,7 @@
            class="me-3" />
       <div>
         <h6 class="mb-1 fw-bold">
-          {{ comment.user.username }} <small class="text-muted fw-normal">- {{ comment.created_at|timesince }}</small>
+          {{ comment.user.username }} <small class="text-muted fw-normal">- {{ comment.created_at|timesince }} ago</small>
         </h6>
         <p>{{ comment.content }}</p>
       </div>
