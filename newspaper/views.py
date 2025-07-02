@@ -82,6 +82,22 @@ class PostByCategoryView(SidebarMixin, ListView):
         return query
 
 
+class PostByTagView(SidebarMixin, ListView):
+    model = Post
+    template_name = "newsportal/list/list.html"
+    context_object_name = "posts"
+    paginate_by = 1
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        query = query.filter(
+            published_at__isnull=False,
+            status="active",
+            tag__id=self.kwargs["tag_id"],
+        ).order_by("-published_at")
+        return query
+
+
 class TagListView(ListView):
     model = Tag
     template_name = "newsportal/tags.html"
@@ -119,10 +135,16 @@ class PostDetailView(SidebarMixin, DetailView):
         current_post = self.object
         current_post.views_count += 1
         current_post.save()
-        
-        context["related_posts"] = Post.objects.filter(
-            published_at__isnull=False, status="active", category=self.object.category
-        ).order_by("-published_at", "-views_count")[:2]
+
+        context["related_posts"] = (
+            Post.objects.filter(
+                published_at__isnull=False,
+                status="active",
+                category=self.object.category,
+            )
+            .exclude(id=self.object.id)
+            .order_by("-published_at", "-views_count")[:2]
+        )
 
         return context
 

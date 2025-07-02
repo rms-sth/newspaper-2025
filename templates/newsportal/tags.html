@@ -9,8 +9,8 @@
 
     <div class="p-4 rounded bg-light shadow-sm tag-cloud-container">
       <div class="article-tags">
-        {% for tag in tags %}          
-          <a href="tag.html">{{ tag.name }}</a>
+        {% for tag in tags %}
+          <a href="{% url 'post-by-tag' tag.id %}">{{ tag.name }}</a>
         {% endfor %}
       </div>
     </div>
