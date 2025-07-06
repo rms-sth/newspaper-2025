@@ -124,7 +124,7 @@ class OurTeam(TimeStampModel):
 # post - comment
 # 1 post can have M comments => M
 # 1 comment is associated to only 1 post => 1
-# ForeginKey => M
+# ForeignKey => M
 
 # comment-user
 # 1 user can add M comment => M

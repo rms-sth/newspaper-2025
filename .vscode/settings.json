@@ -8,6 +8,7 @@
         "api",
         "breaking_news",
         "registration",
-        "post list"
+        "post list",
+        "tags"
     ]
 }
