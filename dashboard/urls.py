@@ -70,4 +70,9 @@ urlpatterns = [
         views.AdminCategoryUpdateView.as_view(),
         name="admin-category-update",
     ),
+    path(
+        "newsletter/unsubscribe/",
+        views.NewsletterUnsubscribeView.as_view(),
+        name="newsletter-unsubscribe",
+    ),
 ]

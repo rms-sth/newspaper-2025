@@ -139,6 +139,9 @@ MEDIA_ROOT = "media"
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/' # Django's default logout view redirects here
 
+# Email backend configuration for development (console backend)
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "webmaster@localhost"
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",

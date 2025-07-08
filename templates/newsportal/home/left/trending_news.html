@@ -16,8 +16,8 @@
              height="250" />
         <div class="card-body">
           <h5 class="card-title">{{ post.title }}</h5>
-          <p class="card-text">{{ post.content|truncatewords:20 }}</p>
-          <a href="article.html" class="btn btn-outline-success btn-sm">Read More</a>
+          <p class="card-text">{{ post.content|striptags|truncatewords:20 }}</p>
+          <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-success btn-sm">Read More</a>
         </div>
         <div class="card-footer">
           <small class="text-muted">{{ post.published_at|date:"F j, Y" }}</small>

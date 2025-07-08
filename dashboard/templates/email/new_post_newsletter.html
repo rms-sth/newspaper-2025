@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New Post Newsletter</title>
+  <style>
+    /* Reset and base */
+    body, table, td, a {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    table, td {
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    img {
+      -ms-interpolation-mode: bicubic;
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      display: block;
+      max-width: 100%;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100% !important;
+      -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: none;
+      background-color: #ffffff;
+      color: #333333;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
+    a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    /* Container */
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+    }
+    /* Header */
+    .header {
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .header-logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a73e8;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    /* Breaking news badge */
+    .breaking-badge {
+      display: inline-block;
+      background-color: #e53935;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      user-select: none;
+    }
+    /* Title */
+    .post-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 20px 0 10px 0;
+      color: #222222;
+    }
+    /* Featured image */
+    .featured-image {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    /* Content */
+    .post-content {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #444444;
+      margin-bottom: 30px;
+    }
+    /* Author and date */
+    .post-meta {
+      font-size: 14px;
+      color: #777777;
+      margin-bottom: 30px;
+    }
+    /* Read full article button */
+    .btn-read-more {
+      display: inline-block;
+      background-color: #1a73e8;
+      color: #ffffff !important;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-align: center;
+      text-decoration: none;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    .btn-read-more:hover {
+      background-color: #155ab6;
+    }
+    /* Footer */
+    .footer {
+      font-size: 12px;
+      color: #999999;
+      text-align: center;
+      border-top: 1px solid #eaeaea;
+      padding-top: 20px;
+      margin-top: 40px;
+      line-height: 1.4;
+    }
+    .footer a {
+      color: #999999;
+      text-decoration: underline;
+    }
+    /* Responsive */
+    @media only screen and (max-width: 480px) {
+      .email-container {
+        padding: 15px;
+      }
+      .post-title {
+        font-size: 24px;
+      }
+      .btn-read-more {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+    }
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212 !important;
+        color: #e0e0e0 !important;
+      }
+      .email-container {
+        background-color: #1e1e1e !important;
+      }
+      .header-logo {
+        color: #90caf9 !important;
+      }
+      .post-title {
+        color: #ffffff !important;
+      }
+      .post-content {
+        color: #cccccc !important;
+      }
+      .post-meta {
+        color: #aaaaaa !important;
+      }
+      .btn-read-more {
+        background-color: #90caf9 !important;
+        color: #121212 !important;
+      }
+      .btn-read-more:hover {
+        background-color: #64b5f6 !important;
+      }
+      .footer {
+        color: #777777 !important;
+        border-top-color: #333333 !important;
+      }
+      .footer a {
+        color: #777777 !important;
+      }
+      .breaking-badge {
+        background-color: #ef5350 !important;
+        color: #ffffff !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <center>
+    <table role="presentation" class="email-container" width="100%" cellpadding="0" cellspacing="0" border="0" aria-label="New Post Newsletter">
+      <tr>
+        <td class="header" role="banner">
+          <!-- Newspaper logo or title -->
+          <div class="header-logo" aria-label="Newspaper Logo or Title">
+            NEWSPORTAL
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <!-- Optional Breaking News Badge -->
+          {% if post.is_breaking_news %}
+          <div class="breaking-badge" aria-label="Breaking News Badge">🔥 Breaking News</div>
+          {% endif %}
+          <!-- Post Title -->
+          <h1 class="post-title">{{ post.title }}</h1>
+          <!-- Featured Image -->
+          <img src="{{ post.featured_image.url }}" alt="Featured Image" class="featured-image" />
+          <!-- Post Content -->
+          <div class="post-content">
+            {{ post.content|safe }}
+          </div>
+          <!-- Author and Publish Date -->
+          <div class="post-meta">
+            By {{ post.author.get_full_name }} | {{ post.published_at|date:"F d, Y" }}
+          </div>
+          <!-- Read Full Article Button -->
+          <div style="text-align:center; margin-bottom: 40px;">
+            <a href="{{ post_url }}" class="btn-read-more" target="_blank" rel="noopener noreferrer" aria-label="Read Full Article">Read Full Article</a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="footer" role="contentinfo">
+          <p>
+            You are receiving this email because you subscribed to our newsletter.<br/>
+            If you wish to unsubscribe, please <a href="{{ unsubscribe_url }}">click here</a>.<br/>
+            Contact us: contact@newsportal.example.com
+          </p>
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+</html>

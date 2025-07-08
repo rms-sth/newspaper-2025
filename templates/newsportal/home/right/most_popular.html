@@ -12,8 +12,8 @@
              width="70"
              height="70" />
         <div>
-          <a href="article.html" class="popular-title-link">{{ post.title|truncatechars:24 }}</a>
-          <p class="popular-description">{{ post.content|truncatechars:53 }}</p>
+          <a href="{% url 'post-detail' post.pk %}" class="popular-title-link">{{ post.title|truncatechars:24 }}</a>
+          <p class="popular-description">{{ post.content|striptags|truncatechars:53 }}</p>
         </div>
       </li>
 
