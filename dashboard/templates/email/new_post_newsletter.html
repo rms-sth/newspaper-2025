@@ -1,234 +1,309 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>New Post Newsletter</title>
-  <style>
-    /* Reset and base */
-    body, table, td, a {
-      -webkit-text-size-adjust: 100%;
-      -ms-text-size-adjust: 100%;
-    }
-    table, td {
-      mso-table-lspace: 0pt;
-      mso-table-rspace: 0pt;
-    }
-    img {
-      -ms-interpolation-mode: bicubic;
-      border: 0;
-      height: auto;
-      line-height: 100%;
-      outline: none;
-      text-decoration: none;
-      display: block;
-      max-width: 100%;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100% !important;
-      -webkit-font-smoothing: antialiased;
-      -webkit-text-size-adjust: none;
-      background-color: #ffffff;
-      color: #333333;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    }
-    a {
-      color: #1a73e8;
-      text-decoration: none;
-    }
-    /* Container */
-    .email-container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #ffffff;
-    }
-    /* Header */
-    .header {
-      text-align: center;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #eaeaea;
-    }
-    .header-logo {
-      font-size: 28px;
-      font-weight: 700;
-      color: #1a73e8;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    /* Breaking news badge */
-    .breaking-badge {
-      display: inline-block;
-      background-color: #e53935;
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 14px;
-      padding: 4px 10px;
-      border-radius: 4px;
-      margin-bottom: 10px;
-      user-select: none;
-    }
-    /* Title */
-    .post-title {
-      font-size: 28px;
-      font-weight: 700;
-      margin: 20px 0 10px 0;
-      color: #222222;
-    }
-    /* Featured image */
-    .featured-image {
-      width: 100%;
-      height: auto;
-      border-radius: 6px;
-      margin-bottom: 20px;
-    }
-    /* Content */
-    .post-content {
-      font-size: 16px;
-      line-height: 1.5;
-      color: #444444;
-      margin-bottom: 30px;
-    }
-    /* Author and date */
-    .post-meta {
-      font-size: 14px;
-      color: #777777;
-      margin-bottom: 30px;
-    }
-    /* Read full article button */
-    .btn-read-more {
-      display: inline-block;
-      background-color: #1a73e8;
-      color: #ffffff !important;
-      font-weight: 600;
-      font-size: 16px;
-      padding: 12px 24px;
-      border-radius: 6px;
-      text-align: center;
-      text-decoration: none;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    .btn-read-more:hover {
-      background-color: #155ab6;
-    }
-    /* Footer */
-    .footer {
-      font-size: 12px;
-      color: #999999;
-      text-align: center;
-      border-top: 1px solid #eaeaea;
-      padding-top: 20px;
-      margin-top: 40px;
-      line-height: 1.4;
-    }
-    .footer a {
-      color: #999999;
-      text-decoration: underline;
-    }
-    /* Responsive */
-    @media only screen and (max-width: 480px) {
-      .email-container {
-        padding: 15px;
-      }
-      .post-title {
-        font-size: 24px;
-      }
-      .btn-read-more {
-        font-size: 14px;
-        padding: 10px 20px;
-      }
-    }
-    /* Dark mode support */
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #121212 !important;
-        color: #e0e0e0 !important;
-      }
-      .email-container {
-        background-color: #1e1e1e !important;
-      }
-      .header-logo {
-        color: #90caf9 !important;
-      }
-      .post-title {
-        color: #ffffff !important;
-      }
-      .post-content {
-        color: #cccccc !important;
-      }
-      .post-meta {
-        color: #aaaaaa !important;
-      }
-      .btn-read-more {
-        background-color: #90caf9 !important;
-        color: #121212 !important;
-      }
-      .btn-read-more:hover {
-        background-color: #64b5f6 !important;
-      }
-      .footer {
-        color: #777777 !important;
-        border-top-color: #333333 !important;
-      }
-      .footer a {
-        color: #777777 !important;
-      }
-      .breaking-badge {
-        background-color: #ef5350 !important;
-        color: #ffffff !important;
-      }
-    }
-  </style>
-</head>
-<body>
-  <center>
-    <table role="presentation" class="email-container" width="100%" cellpadding="0" cellspacing="0" border="0" aria-label="New Post Newsletter">
-      <tr>
-        <td class="header" role="banner">
-          <!-- Newspaper logo or title -->
-          <div class="header-logo" aria-label="Newspaper Logo or Title">
-            NEWSPORTAL
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <!-- Optional Breaking News Badge -->
-          {% if post.is_breaking_news %}
-          <div class="breaking-badge" aria-label="Breaking News Badge">🔥 Breaking News</div>
-          {% endif %}
-          <!-- Post Title -->
-          <h1 class="post-title">{{ post.title }}</h1>
-          <!-- Featured Image -->
-          <img src="{{ post.featured_image.url }}" alt="Featured Image" class="featured-image" />
-          <!-- Post Content -->
-          <div class="post-content">
-            {{ post.content|safe }}
-          </div>
-          <!-- Author and Publish Date -->
-          <div class="post-meta">
-            By {{ post.author.get_full_name }} | {{ post.published_at|date:"F d, Y" }}
-          </div>
-          <!-- Read Full Article Button -->
-          <div style="text-align:center; margin-bottom: 40px;">
-            <a href="{{ post_url }}" class="btn-read-more" target="_blank" rel="noopener noreferrer" aria-label="Read Full Article">Read Full Article</a>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="footer" role="contentinfo">
-          <p>
-            You are receiving this email because you subscribed to our newsletter.<br/>
-            If you wish to unsubscribe, please <a href="{{ unsubscribe_url }}">click here</a>.<br/>
-            Contact us: contact@newsportal.example.com
-          </p>
-        </td>
-      </tr>
-    </table>
-  </center>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Post Newsletter</title>
+    <style>
+        /* Reset and base */
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            display: block;
+            max-width: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: none;
+            background-color: #f4f7fa; /* Light grey background for the body */
+            color: #333333;
+            font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+                "Helvetica Neue", sans-serif; /* Slightly refined font stack */
+        }
+
+        a {
+            color: #007bff; /* A standard blue for links */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto; /* Add vertical margin for better separation */
+            padding: 30px; /* Increase padding for more breathing room */
+            background-color: #ffffff;
+            border-radius: 8px; /* Rounded corners for the container */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding-bottom: 25px; /* Slightly more padding */
+            border-bottom: 1px solid #e0e0e0; /* Lighter border */
+            margin-bottom: 30px; /* More space after header */
+        }
+
+        .header-logo {
+            font-size: 32px; /* Larger logo */
+            font-weight: 800; /* Bolder */
+            color: #007bff; /* Consistent blue */
+            letter-spacing: 3px; /* More pronounced spacing */
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        /* Breaking news badge */
+        .breaking-badge {
+            display: inline-block;
+            background-color: #ff4136; /* Brighter red */
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 13px; /* Slightly smaller */
+            padding: 6px 12px; /* More padding */
+            border-radius: 20px; /* Pill shape */
+            margin-bottom: 15px; /* More space below */
+            user-select: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Title */
+        .post-title {
+            font-size: 32px; /* Larger title */
+            font-weight: 700;
+            margin: 0 0 15px 0; /* Adjusted margin */
+            color: #222222;
+            line-height: 1.2;
+        }
+
+        /* Featured image */
+        .featured-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px; /* Consistent rounded corners */
+            margin-bottom: 25px; /* More space below image */
+            object-fit: cover; /* Ensure image covers area without distortion */
+        }
+
+        /* Content */
+        .post-content {
+            font-size: 17px; /* Slightly larger text */
+            line-height: 1.6; /* Improved line height for readability */
+            color: #444444;
+            margin-bottom: 30px;
+            text-align: justify; /* Justify text for a cleaner look */
+        }
+
+        /* Author and date */
+        .post-meta {
+            font-size: 13px; /* Slightly smaller meta info */
+            color: #777777;
+            margin-bottom: 35px; /* More space before button */
+            text-align: center; /* Center align meta info */
+        }
+
+        .author-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            vertical-align: middle;
+            margin-right: 10px;
+            border: 2px solid #eeeeee;
+        }
+
+        /* Read full article button */
+        .btn-read-more {
+            display: inline-block;
+            background-color: #007bff; /* Consistent blue */
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 17px; /* Slightly larger font */
+            padding: 14px 28px; /* More generous padding */
+            border-radius: 30px; /* More rounded, pill-like button */
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Add transform for hover effect */
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Subtle shadow for the button */
+        }
+
+        .btn-read-more:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
+
+        /* Footer */
+        .footer {
+            font-size: 13px; /* Slightly larger footer text */
+            color: #777777; /* Softer grey */
+            text-align: center;
+            border-top: 1px solid #e0e0e0; /* Lighter border */
+            padding-top: 25px; /* More padding */
+            margin-top: 50px; /* More space above footer */
+            line-height: 1.6; /* Improved line height */
+        }
+
+        .footer a {
+            color: #777777;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        /* Responsive */
+        @media only screen and (max-width: 480px) {
+            .email-container {
+                padding: 15px;
+            }
+
+            .post-title {
+                font-size: 28px; /* Adjust for smaller screens */
+            }
+
+            .btn-read-more {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a !important; /* Darker background */
+                color: #e0e0e0 !important;
+            }
+
+            .email-container {
+                background-color: #2d2d2d !important; /* Darker container */
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important; /* More pronounced shadow in dark mode */
+            }
+
+            .header-logo {
+                color: #64b5f6 !important; /* Lighter blue for dark mode logo */
+            }
+
+            .post-title {
+                color: #f0f0f0 !important; /* Lighter title in dark mode */
+            }
+
+            .post-content {
+                color: #d0d0d0 !important; /* Lighter content in dark mode */
+            }
+
+            .post-meta {
+                color: #b0b0b0 !important; /* Lighter meta in dark mode */
+            }
+
+            .btn-read-more {
+                background-color: #64b5f6 !important; /* Lighter blue for button */
+                color: #1a1a1a !important; /* Darker text for contrast */
+                box-shadow: 0 4px 8px rgba(100, 181, 246, 0.2) !important;
+            }
+
+            .btn-read-more:hover {
+                background-color: #42a5f5 !important; /* Darker blue on hover */
+            }
+
+            .footer {
+                color: #999999 !important; /* Lighter footer text */
+                border-top-color: #444444 !important; /* Darker border */
+            }
+
+            .footer a {
+                color: #999999 !important;
+            }
+
+            .breaking-badge {
+                background-color: #ff6b6b !important; /* Brighter red for dark mode */
+                color: #ffffff !important;
+            }
+        }
+    </style>
+  </head>
+  <body>
+    <center>
+      <table role="presentation"
+             class="email-container"
+             width="100%"
+             cellpadding="0"
+             cellspacing="0"
+             border="0"
+             aria-label="New Post Newsletter">
+        <tr>
+          <td class="header" role="banner">
+            <!-- Newspaper logo or title -->
+            <div class="header-logo" aria-label="Newspaper Logo or Title">NEWSPORTAL</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <!-- Optional Breaking News Badge -->
+            {% if post.is_breaking_news %}
+              <div style="text-align: center;">
+                <div class="breaking-badge" aria-label="Breaking News Badge">🔥 Breaking News</div>
+              </div>
+            {% endif %}
+            <!-- Post Title -->
+            <h1 class="post-title" style="text-align: center;">{{ post.title }}</h1>
+            <!-- Featured Image -->
+            <img src="{{ post.featured_image.url }}"
+                 alt="Featured Image"
+                 class="featured-image" />
+            <!-- Post Content -->
+            <div class="post-content">{{ post.content|safe|truncatechars:300 }}</div>
+            <!-- Author and Publish Date -->
+            <div class="post-meta">
+              {% if post.author.userprofile.image.url %}
+                <img src="{{ post.author.userprofile.image.url }}" alt="{{ post.author.get_full_name }}" class="author-image" />
+              {% endif %}
+              By {{ post.author.get_full_name }} | {{ post.published_at|date:"F d, Y" }}
+            </div>
+            <!-- Read Full Article Button -->
+            <div style="text-align:center; margin-top: 20px; margin-bottom: 40px;">
+              <a href="{{ post_url }}"
+                 class="btn-read-more"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 aria-label="Read Full Article">Read Full Article</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="footer" role="contentinfo">
+            <p>
+              You are receiving this email because you subscribed to our newsletter.
+              <br />
+              If you wish to unsubscribe, please <a href="{{ unsubscribe_url }}">click here</a>.
+              <br />
+              Contact us: contact@newsportal.example.com
+            </p>
+          </td>
+        </tr>
+      </table>
+    </center>
+  </body>
 </html>

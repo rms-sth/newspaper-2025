@@ -1,16 +1,17 @@
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.shortcuts import redirect
-from django.urls import reverse_lazy, reverse
-from django.utils import timezone
-from django.views.generic import CreateView, ListView, UpdateView, View
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.template.loader import render_to_string
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import CreateView, ListView, UpdateView, View
 
 from dashboard.forms import CategoryForm, PostForm, TagForm
-from newspaper.models import Category, Post, Tag, Newsletter
+from newspaper.models import Category, Newsletter, Post, Tag
 
 
 class StaffRequiredMixin(UserPassesTestMixin):
@@ -46,26 +47,38 @@ class AdminDraftPublishView(StaffRequiredMixin, View):
 
     def send_newsletter_email(self, post, request):
         subscribers = Newsletter.objects.all()
-        recipient_list = [subscriber.email for subscriber in subscribers]
 
-        if recipient_list:
-            post_url = request.build_absolute_uri(reverse('post-detail', args=[post.pk]))
-            unsubscribe_url = request.build_absolute_uri(reverse('newsletter-unsubscribe'))
-
-            context = {
-                'post': post,
-                'post_url': post_url,
-                'unsubscribe_url': unsubscribe_url,
-            }
-
+        if subscribers.exists():
+            messages = []
             subject = f"New Post Published: {post.title}"
             from_email = settings.DEFAULT_FROM_EMAIL
-            html_content = render_to_string('email/new_post_newsletter.html', context)
+
+            for subscriber in subscribers:
+                post_url = request.build_absolute_uri(
+                    reverse("post-detail", args=[post.pk])
+                )
+                unsubscribe_url = request.build_absolute_uri(
+                    reverse("newsletter-unsubscribe") + f"?email={subscriber.email}"
+                )
+
+                context = {
+                    "post": post,
+                    "post_url": post_url,
+                    "unsubscribe_url": unsubscribe_url,
+                }
+
+                html_content = render_to_string(
+                    "email/new_post_newsletter.html", context
+                )
+                msg = EmailMultiAlternatives(
+                    subject, "", from_email, [subscriber.email]
+                )
+                msg.attach_alternative(html_content, "text/html")
+                messages.append(msg)
 
             try:
-                msg = EmailMultiAlternatives(subject, '', from_email, recipient_list)
-                msg.attach_alternative(html_content, "text/html")
-                msg.send()
+                with get_connection() as connection:
+                    connection.send_messages(messages)
             except Exception as e:
                 # Log error or handle as needed
                 pass
@@ -78,15 +91,10 @@ class AdminDraftPublishView(StaffRequiredMixin, View):
         return redirect("admin-post-list")
 
 
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class NewsletterUnsubscribeView(View):
     def get(self, request):
-        email = request.GET.get('email')
+        email = request.GET.get("email")
         if email:
             try:
                 subscriber = Newsletter.objects.get(email=email)
