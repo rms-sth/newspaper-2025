@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets, exceptions, status
-
 from rest_framework.response import Response
+from api.permissions import IsStaffOrOwner
 
 from api.serializers import (
     CategorySerializer,
@@ -204,13 +204,13 @@ class PostPublishViewSet(APIView):
             return Response(serialized_data, status=status.HTTP_200_OK)
 
 
-class CommentViewSet(APIView):
+class CommentListCreateAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get_permissions(self):
-        if self.request.method in ["PUT", "PATCH", "DELETE"]:
-            return [permissions.IsAdminUser()]
-        return super().get_permissions()
+        if self.request.method == "POST":
+            return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
 
     def get(self, request, post_id, *args, **kwargs):
         comments = Comment.objects.filter(post=post_id).order_by("-created_at")
@@ -218,8 +218,43 @@ class CommentViewSet(APIView):
         return Response(serialized_data, status=status.HTTP_200_OK)
 
     def post(self, request, post_id, *args, **kwargs):
-        request.data.update({"post": post_id, 'user': request.user.id})
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
+            serializer.save(post_id=post_id, user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CommentDetailAPIView(APIView):
+    permission_classes = [IsStaffOrOwner]
+
+    def get_object(self, pk):
+        try:
+            obj = Comment.objects.get(pk=pk)
+            self.check_object_permissions(self.request, obj)
+            return obj
+        except Comment.DoesNotExist:
+            raise exceptions.NotFound({"detail": "Comment not found."})
+
+    def get(self, request, post_id, pk, *args, **kwargs):
+        comment = self.get_object(pk)
+        serialized_data = CommentSerializer(comment).data
+        return Response(serialized_data, status=status.HTTP_200_OK)
+
+    def put(self, request, post_id, pk, *args, **kwargs):
+        comment = self.get_object(pk)
+        serializer = CommentSerializer(comment, data=request.data, partial=False)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, post_id, pk, *args, **kwargs):
+        comment = self.get_object(pk)
+        serializer = CommentSerializer(comment, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, post_id, pk, *args, **kwargs):
+        comment = self.get_object(pk)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -43,8 +43,13 @@ urlpatterns = [
     ),
     path(
         "post/<int:post_id>/comments/",
-        views.CommentViewSet.as_view(),
-        name="comment-list-api",
+        views.CommentListCreateAPIView.as_view(),
+        name="comment-list-create-api",
+    ),
+    path(
+        "post/<int:post_id>/comments/<int:pk>/",
+        views.CommentDetailAPIView.as_view(),
+        name="comment-detail-api",
     ),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]

@@ -74,4 +74,9 @@ class PostPublishSerializer(serializers.Serializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = "__all__"
+        fields = ["id", "content", "created_at", "post", "user"]
+        extra_kwargs = {
+            "post": {"read_only": True},
+            "user": {"read_only": True},
+            "created_at": {"read_only": True},
+        }
