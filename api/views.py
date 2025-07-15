@@ -13,6 +13,7 @@ from api.serializers import (
     PostSerializer,
     TagSerializer,
     UserSerializer,
+    UserRegistrationSerializer,
 )
 from newspaper.models import Category, Comment, Contact, Newsletter, Post, Tag
 from rest_framework.generics import ListAPIView, RetrieveAPIView
@@ -258,3 +259,11 @@ class CommentDetailAPIView(APIView):
         comment = self.get_object(pk)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+from rest_framework.generics import CreateAPIView
+
+
+class UserRegistrationView(CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [permissions.AllowAny]

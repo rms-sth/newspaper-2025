@@ -51,5 +51,6 @@ urlpatterns = [
         views.CommentDetailAPIView.as_view(),
         name="comment-detail-api",
     ),
+    path("register/", views.UserRegistrationView.as_view(), name="register"),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]
