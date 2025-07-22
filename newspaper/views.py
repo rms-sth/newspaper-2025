@@ -1,8 +1,9 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.views.generic.edit import FormMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from newspaper.forms import CommentForm, ContactForm, NewsletterForm
 from newspaper.models import Advertisement, Category, Contact, OurTeam, Post, Tag
@@ -121,12 +122,13 @@ class ContactCreateView(SuccessMessageMixin, CreateView):
 
     def form_invalid(self, form):
         messages.error(
-            self.request, "There was an error sending your message. Please check the form."
+            self.request,
+            "There was an error sending your message. Please check the form.",
         )
         return super().form_invalid(form)
 
 
-class PostDetailView(LoginRequiredMixin, SidebarMixin, FormMixin, DetailView):
+class PostDetailView(SidebarMixin, FormMixin, DetailView):
     model = Post
     template_name = "newsportal/detail/detail.html"
     context_object_name = "post"
@@ -160,6 +162,7 @@ class PostDetailView(LoginRequiredMixin, SidebarMixin, FormMixin, DetailView):
         context["form"] = self.get_form()
         return context
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
@@ -181,8 +184,6 @@ class PostDetailView(LoginRequiredMixin, SidebarMixin, FormMixin, DetailView):
             self.request, "There was an error with your comment. Please check the form."
         )
         return super().form_invalid(form)
-
-
 
 
 from django.http import JsonResponse
