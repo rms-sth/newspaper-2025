@@ -9,12 +9,13 @@ urlpatterns = [
         views.PostByCategoryView.as_view(),
         name="post-by-category",
     ),
-    path("post-by-tag/<int:tag_id>/", views.PostByTagView.as_view(), name="post-by-tag"),
+    path(
+        "post-by-tag/<int:tag_id>/", views.PostByTagView.as_view(), name="post-by-tag"
+    ),
     path("tag-list/", views.TagListView.as_view(), name="tag-list"),
     path("category-list/", views.CategoryListView.as_view(), name="category-list"),
     path("contact/", views.ContactCreateView.as_view(), name="contact"),
     path("post-detail/<int:pk>/", views.PostDetailView.as_view(), name="post-detail"),
-    path("comment/", views.CommentView.as_view(), name="comment"),
     path("newsletter/", views.NewsletterView.as_view(), name="newsletter"),
     path("search/", views.PostSearchView.as_view(), name="search"),
     path("about/", views.AboutView.as_view(), name="about"),

@@ -1,6 +1,20 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
+
+
+# We also need a custom Login Form to apply Bootstrap classes
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Username"}
+        )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Password"}
+        )
+    )
 
 
 class RegistrationForm(UserCreationForm):
@@ -39,17 +53,3 @@ class RegistrationForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("An account with this email already exists.")
         return email
-
-
-# We also need a custom Login Form to apply Bootstrap classes
-class LoginForm(AuthenticationForm):
-    username = forms.CharField(
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Username"}
-        )
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": "Password"}
-        )
-    )
