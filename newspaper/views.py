@@ -29,7 +29,7 @@ class SidebarMixin:
         return context
 
 
-class HomeView(SidebarMixin, ListView):
+class HomeView(SidebarMixin, TemplateView):
     model = Post
     template_name = "newsportal/home.html"
     context_object_name = "posts"
@@ -39,20 +39,25 @@ class HomeView(SidebarMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        context["breaking_news"] = Post.objects.filter(
+            published_at__isnull=False, status="active", is_breaking_news=True
+        ).order_by("-published_at")[:3]
+
         context["featured_post"] = (
             Post.objects.filter(published_at__isnull=False, status="active")
             .order_by("-published_at", "-views_count")
             .first()
         )
 
+        context["trending_news"] = Post.objects.filter(
+            published_at__isnull=False, status="active"
+        ).order_by("-published_at")[:4]
+
         one_week_ago = timezone.now() - timedelta(days=7)
         context["weekly_top_posts"] = Post.objects.filter(
             published_at__isnull=False, status="active", published_at__gte=one_week_ago
         ).order_by("-published_at", "-views_count")[:5]
-
-        context["breaking_news"] = Post.objects.filter(
-            published_at__isnull=False, status="active", is_breaking_news=True
-        ).order_by("-published_at")[:3]
 
         return context
 
@@ -134,9 +139,6 @@ class PostDetailView(SidebarMixin, FormMixin, DetailView):
     context_object_name = "post"
     form_class = CommentForm
 
-    def get_success_url(self):
-        return reverse("post-detail", kwargs={"pk": self.object.pk})
-
     def get_queryset(self):
         query = super().get_queryset()
         query = query.filter(published_at__isnull=False, status="active")
@@ -161,6 +163,9 @@ class PostDetailView(SidebarMixin, FormMixin, DetailView):
         )
         context["form"] = self.get_form()
         return context
+
+    def get_success_url(self):
+        return reverse("post-detail", kwargs={"pk": self.object.pk})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):

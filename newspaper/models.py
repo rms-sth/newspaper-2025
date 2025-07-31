@@ -20,27 +20,15 @@ class Category(TimeStampModel):
     class Meta:
         ordering = ["name"]  # Category.objects.all()
         verbose_name = "category"
-        verbose_name_plural = "Categories"  # Add this line
+        verbose_name_plural = "Categories" 
 
 
 class Tag(TimeStampModel):
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        """
-        Return a string representation of the Tag, which is its name.
-        """
         return self.name
 
-
-# null = True => when there is no data in published_at null value will be saved in db
-# blank = True => no need to validate if the data is not provided
-
-
-# post.tag.all()
-
-
-# post.
 class Post(TimeStampModel):
     STATUS_CHOICES = [
         ("active", "Active"),
