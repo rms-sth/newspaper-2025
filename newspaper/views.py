@@ -152,7 +152,7 @@ class PostDetailView(SidebarMixin, FormMixin, DetailView):
         current_post.views_count += 1
         current_post.save()
 
-        context["related_posts"] = (
+        context["related_articles"] = (
             Post.objects.filter(
                 published_at__isnull=False,
                 status="active",
