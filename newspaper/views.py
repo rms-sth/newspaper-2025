@@ -1,9 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
-from django.views.generic.edit import FormMixin
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+
 
 from newspaper.forms import CommentForm, ContactForm, NewsletterForm
 from newspaper.models import Advertisement, Category, Contact, OurTeam, Post, Tag
@@ -133,6 +131,11 @@ class ContactCreateView(SuccessMessageMixin, CreateView):
         return super().form_invalid(form)
 
 
+from django.views.generic.edit import FormMixin
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+
 class PostDetailView(SidebarMixin, FormMixin, DetailView):
     model = Post
     template_name = "newsportal/detail/detail.html"
@@ -236,7 +239,7 @@ from django.db.models import Q
 class PostSearchView(View):
     template_name = "newsportal/list/list.html"
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         # query=nepal search => title=nepal or content=nepal
         print(request.GET)
         query = request.GET["query"]  # nepal => NePal

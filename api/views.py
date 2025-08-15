@@ -89,11 +89,11 @@ class PostViewSet(viewsets.ModelViewSet):
             # search start:
             from django.db.models import Q
 
-            search_term = self.request.query_params.get("search", None)
-            if search_term:
+            query = self.request.query_params.get("query", None)
+            if query:
                 # Search by title and content (case-insensitive)
                 queryset = queryset.filter(
-                    Q(title__icontains=search_term) | Q(content__icontains=search_term)
+                    Q(title__icontains=query) | Q(content__icontains=query)
                 )
             # search end
         return queryset

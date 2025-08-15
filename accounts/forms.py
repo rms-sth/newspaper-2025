@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
 
 
 # We also need a custom Login Form to apply Bootstrap classes
@@ -15,6 +14,10 @@ class LoginForm(AuthenticationForm):
             attrs={"class": "form-control", "placeholder": "Password"}
         )
     )
+
+
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.models import User
 
 
 class RegistrationForm(UserCreationForm):
