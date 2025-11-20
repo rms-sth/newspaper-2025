@@ -28,12 +28,7 @@ class SidebarMixin:
 
 
 class HomeView(SidebarMixin, TemplateView):
-    model = Post
     template_name = "newsportal/home.html"
-    context_object_name = "posts"
-    queryset = Post.objects.filter(
-        published_at__isnull=False, status="active"
-    ).order_by("-published_at")[:4]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
