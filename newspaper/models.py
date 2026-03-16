@@ -95,7 +95,7 @@ class Comment(TimeStampModel):
 class Newsletter(TimeStampModel):
     email = models.EmailField(unique=True)
 
-    def __str__(self):
+    def __str__(self):        
         return self.email
 
 

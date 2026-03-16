@@ -9,13 +9,14 @@ from api.serializers import (
     ContactSerializer,
     GroupSerializer,
     NewsletterSerializer,
+    OurTeamSerializer,
     PostPublishSerializer,
     PostSerializer,
     TagSerializer,
     UserSerializer,
     UserRegistrationSerializer,
 )
-from newspaper.models import Category, Comment, Contact, Newsletter, Post, Tag
+from newspaper.models import Category, Comment, Contact, Newsletter, OurTeam, Post, Tag
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 
@@ -153,7 +154,38 @@ class DraftDetailView(RetrieveAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 
+from rest_framework.views import APIView
+from rest_framework import status
+from django.utils import timezone
+
+
+class PostPublishViewSet(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = PostPublishSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            data = serializer.data
+
+            # publish the post
+            post = Post.objects.get(pk=data["id"])
+            post.published_at = timezone.now()
+            post.save()
+
+            serialized_data = PostSerializer(post).data
+            return Response(serialized_data, status=status.HTTP_200_OK)
+
+
+class MostPopularPostListView(ListAPIView):
+    queryset = Post.objects.filter(
+        published_at__isnull=False, status="active"
+    ).order_by("-published_at")[:5]
+    serializer_class = PostSerializer
+    permission_classes = [permissions.AllowAny]
+
+
 from rest_framework import exceptions
+
 
 class NewsletterViewSet(viewsets.ModelViewSet):
     queryset = Newsletter.objects.all()
@@ -183,26 +215,10 @@ class ContactViewSet(viewsets.ModelViewSet):
         raise exceptions.MethodNotAllowed(request.method)
 
 
-from rest_framework.views import APIView
-from rest_framework import status
-from django.utils import timezone
-
-
-class PostPublishViewSet(APIView):
-    permission_classes = [permissions.IsAdminUser]
-
-    def post(self, request, *args, **kwargs):
-        serializer = PostPublishSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            data = serializer.data
-
-            # publish the post
-            post = Post.objects.get(pk=data["id"])
-            post.published_at = timezone.now()
-            post.save()
-
-            serialized_data = PostSerializer(post).data
-            return Response(serialized_data, status=status.HTTP_200_OK)
+class OurTeamListView(ListAPIView):
+    queryset = OurTeam.objects.all()
+    serializer_class = OurTeamSerializer
+    permission_classes = [permissions.AllowAny]
 
 
 class CommentListCreateAPIView(APIView):

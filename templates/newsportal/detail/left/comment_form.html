@@ -8,7 +8,6 @@
       {% csrf_token %}
       <div class="mb-3">
         <label for="commentText" class="form-label">Leave a Comment</label>
-        <input type="hidden" name="post" value="{{ post.id }}" />
         {{ form.content.errors }}
         <textarea class="form-control"
                   name="content"
