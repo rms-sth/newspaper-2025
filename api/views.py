@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from api.permissions import IsStaffOrOwner
 
 from api.serializers import (
+    AdvertisementSerializer,
     CategorySerializer,
     CommentSerializer,
     ContactSerializer,
@@ -16,7 +17,16 @@ from api.serializers import (
     UserSerializer,
     UserRegistrationSerializer,
 )
-from newspaper.models import Category, Comment, Contact, Newsletter, OurTeam, Post, Tag
+from newspaper.models import (
+    Advertisement,
+    Category,
+    Comment,
+    Contact,
+    Newsletter,
+    OurTeam,
+    Post,
+    Tag,
+)
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 
@@ -219,6 +229,21 @@ class OurTeamListView(ListAPIView):
     queryset = OurTeam.objects.all()
     serializer_class = OurTeamSerializer
     permission_classes = [permissions.AllowAny]
+
+
+class AdvertisementViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Advertisements to be viewed or edited.
+    """
+
+    queryset = Advertisement.objects.all().order_by("-created_at")
+    serializer_class = AdvertisementSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return [permissions.AllowAny()]
+        return super().get_permissions()
 
 
 class CommentListCreateAPIView(APIView):

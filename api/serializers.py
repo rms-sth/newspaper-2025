@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 
-from newspaper.models import Category, Comment, Contact, Newsletter, OurTeam, Post, Tag
+from newspaper.models import Advertisement, Category, Comment, Contact, Newsletter, OurTeam, Post, Tag
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -74,6 +74,12 @@ class PostPublishSerializer(serializers.Serializer):
 class OurTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = OurTeam
+        fields = "__all__"
+
+
+class AdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Advertisement
         fields = "__all__"
 
 
