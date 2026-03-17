@@ -78,8 +78,13 @@
         {% if user.is_authenticated %}
           <span class="navbar-text me-3">Welcome, {{ user.username }}!</span>
           {% if user.is_staff %}
-            <a href="{% url 'admin-post-list' %}"
-               class="btn btn-outline-primary btn-sm me-3">Dashboard</a>
+            <a href="{% url 'users' %}"
+               class="btn btn-sm btn-outline-success me-2"
+               data-bs-toggle="tooltip"
+               data-bs-placement="bottom"
+               title="Download User Report">
+              <i class="bi bi-file-earmark-arrow-down-fill"></i>
+            </a>
           {% endif %}
           <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
             {% csrf_token %}

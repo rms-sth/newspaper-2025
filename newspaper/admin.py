@@ -15,6 +15,8 @@ admin.site.register(Newsletter)
 
 class PostAdmin(SummernoteModelAdmin):
     summernote_fields = ("content",)
+    date_hierarchy = "published_at"
+    list_display = ["title", "author", "published_at", "status"]
 
 
 admin.site.register(Post, PostAdmin)
